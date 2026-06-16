@@ -7,6 +7,10 @@
 <meta property="og:title" content="Adeeb & Maha — Wedding Invitation"/>
 <meta property="og:description" content="With the blessings of Allah, we joyfully invite you to celebrate the wedding of Dr. Adeeb Mohammed & Dr. Maha Marakkar — 20 August 2026, Palakkad."/>
 <meta property="og:type" content="website"/>
+<meta property="og:image" content="" id="ogImage"/>
+<meta property="og:image:secure_url" content="" id="ogImageSecure"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="" id="twImage"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cormorant+Upright:wght@300;400;500&family=Inter+Tight:wght@300;400;500&family=Amiri:wght@400;700&family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Pinyon+Script&display=swap" rel="stylesheet"/>
@@ -514,6 +518,15 @@ document.getElementById('ceremIcal').href=ics("Adeeb & Maha — Wedding Function
 
 let adminMode = false;
 
+// ── SET LINK-PREVIEW THUMBNAIL (og:image) FROM HERO IMAGE ──
+function setThumbnail(url){
+  if(!url || typeof url !== 'string' || url.indexOf('http') !== 0) return;
+  ['ogImage','ogImageSecure','twImage'].forEach(function(id){
+    var m = document.getElementById(id);
+    if(m) m.setAttribute('content', url);
+  });
+}
+
 // ── LOAD HERO IMAGE FROM FIREBASE ──
 function loadHeroImage(){
   if(!window._db) return;
@@ -526,6 +539,7 @@ function loadHeroImage(){
         heroBg.style.backgroundSize = 'cover';
         heroBg.style.backgroundPosition = 'center';
       }
+      setThumbnail(url);
     }
   });
 }
@@ -682,6 +696,7 @@ function uploadHeroImage(){
       heroBg.style.backgroundImage = `url('${url}')`;
       heroBg.style.backgroundSize = 'cover';
       heroBg.style.backgroundPosition = 'center';
+      setThumbnail(url);
       btn.textContent = '+ CHANGE PHOTO';
       if(oldPid && oldPid !== data.public_id){ deleteCloudinaryAsset(oldPid, 'image'); }
     } catch(e){
