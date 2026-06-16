@@ -187,6 +187,20 @@ section{position:relative;z-index:3;padding:5rem 1.5rem;}
 .wish .wn{font-family:var(--serif);font-style:italic;color:var(--gold-hi);font-size:1.1rem;margin-bottom:.3rem;}
 .wish .wm{font-family:var(--italic);font-style:italic;color:var(--ivory);opacity:.75;font-size:.98rem;line-height:1.55;}
 .wish .wd{font-family:var(--micro);font-size:.55rem;letter-spacing:.2em;color:var(--ivory);opacity:.4;margin-top:.6rem;}
+.wish-actions{display:flex;gap:1.4rem;align-items:center;margin-top:.7rem;}
+.wish-like,.wish-reply-btn{background:none;border:none;cursor:pointer;font-family:var(--micro);font-size:.58rem;letter-spacing:.18em;color:var(--gold);display:inline-flex;align-items:center;gap:.4rem;padding:0;transition:color .25s;-webkit-tap-highlight-color:transparent;}
+.wish-like .heart{font-size:1.05rem;line-height:1;transition:transform .25s;}
+.wish-like.liked{color:var(--gold-hi);}
+.wish-like.liked .heart{color:#e0556b;transform:scale(1.15);}
+.wish-reply-btn:hover{color:var(--gold-hi);}
+.wish-replies{margin-top:.4rem;}
+.reply{font-family:var(--italic);font-style:italic;color:var(--ivory);opacity:.78;font-size:.92rem;line-height:1.5;padding:.4rem 0 .4rem .8rem;border-left:1px solid var(--gold-dim);margin-top:.4rem;}
+.reply .reply-n{font-family:var(--serif);font-style:normal;color:var(--gold-hi);font-size:.85rem;margin-right:.45rem;}
+.reply-box{margin-top:.7rem;display:flex;flex-direction:column;gap:.5rem;}
+.reply-box input{width:100%;padding:.6rem .8rem;background:transparent;border:1px solid var(--line);font-family:var(--italic);font-style:italic;color:var(--ivory);font-size:.92rem;}
+.reply-box input:focus{outline:none;border-color:var(--gold);}
+.reply-box .reply-send{align-self:flex-start;padding:.5rem 1.2rem;background:var(--gold);color:var(--ink);border:none;font-family:var(--micro);font-size:.55rem;letter-spacing:.3em;cursor:pointer;}
+.reply-box .reply-send:hover{background:var(--gold-hi);}
 
 /* ── CONTACT ── */
 .contact{padding:1.5rem;border:1px solid var(--line);margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
@@ -772,8 +786,108 @@ function prependWish(w){
 function buildWishEl(w){
   const div = document.createElement('div');
   div.className = 'wish';
-  div.innerHTML = `<div class="wn">${esc(w.name)}</div><div class="wm">"${esc(w.msg)}"</div><div class="wd">${esc(w.time||'')}</div>`;
+  div.dataset.key = w.key;
+  const likes = w.likes || 0;
+  div.innerHTML = `<div class="wn">${esc(w.name)}</div><div class="wm">"${esc(w.msg)}"</div><div class="wd">${esc(w.time||'')}</div>`
+    + `<div class="wish-actions">`
+    +   `<button type="button" class="wish-like"><span class="heart">♡</span><span class="like-count">${likes}</span></button>`
+    +   `<button type="button" class="wish-reply-btn">Reply</button>`
+    + `</div>`
+    + `<div class="wish-replies"></div>`
+    + `<div class="reply-box" style="display:none;">`
+    +   `<input type="text" class="reply-name" placeholder="Your name"/>`
+    +   `<input type="text" class="reply-msg" placeholder="Write a reply…"/>`
+    +   `<button type="button" class="reply-send">Reply</button>`
+    + `</div>`;
+
+  const likeBtn  = div.querySelector('.wish-like');
+  const replyBtn = div.querySelector('.wish-reply-btn');
+  const sendBtn  = div.querySelector('.reply-send');
+  const repliesEl= div.querySelector('.wish-replies');
+  const box      = div.querySelector('.reply-box');
+
+  // Prefill reply name with the personalised guest name (if present)
+  if(window.__guestName){ div.querySelector('.reply-name').value = window.__guestName; }
+
+  likeBtn.addEventListener('click', ()=>toggleLike(w.key, likeBtn));
+  replyBtn.addEventListener('click', ()=>{ box.style.display = (box.style.display==='none' ? 'flex' : 'none'); });
+  sendBtn.addEventListener('click', ()=>submitReply(w.key, box));
+
+  setHeart(likeBtn, w.key);
+  if(window._db && String(w.key).indexOf('local')!==0){
+    attachLikeListener(w.key, likeBtn);
+    attachRepliesListener(w.key, repliesEl);
+  }
   return div;
+}
+
+// ── WISH LIKES ──
+function setHeart(btn, key){
+  const liked = localStorage.getItem('aWm_liked_'+key)==='1';
+  btn.classList.toggle('liked', liked);
+  btn.querySelector('.heart').textContent = liked ? '♥' : '♡';
+}
+function attachLikeListener(key, btn){
+  window._db.ref(WISHES_PATH+'/'+key+'/likes').on('value', s=>{
+    btn.querySelector('.like-count').textContent = s.val()||0;
+    setHeart(btn, key);
+  });
+}
+function toggleLike(key, btn){
+  const lsKey = 'aWm_liked_'+key;
+  const liked = localStorage.getItem(lsKey)==='1';
+  if(!window._db || String(key).indexOf('local')===0){
+    // No backend — toggle locally only
+    const c = btn.querySelector('.like-count');
+    let n = parseInt(c.textContent)||0;
+    if(liked){ localStorage.removeItem(lsKey); c.textContent = Math.max(0,n-1); }
+    else { localStorage.setItem(lsKey,'1'); c.textContent = n+1; }
+    setHeart(btn, key);
+    return;
+  }
+  window._db.ref(WISHES_PATH+'/'+key+'/likes').transaction(
+    cur => { cur = cur||0; return liked ? Math.max(0,cur-1) : cur+1; },
+    (err, committed) => {
+      if(!err && committed){
+        if(liked) localStorage.removeItem(lsKey); else localStorage.setItem(lsKey,'1');
+        setHeart(btn, key);
+      }
+    }
+  );
+}
+
+// ── WISH REPLIES ──
+function attachRepliesListener(key, container){
+  window._db.ref(WISHES_PATH+'/'+key+'/replies').on('value', s=>{
+    container.innerHTML='';
+    s.forEach(c=>{ container.appendChild(buildReplyEl(c.val())); });
+  });
+}
+function buildReplyEl(r){
+  const d = document.createElement('div');
+  d.className = 'reply';
+  d.innerHTML = `<span class="reply-n">${esc(r.name)}</span>${esc(r.msg)}`;
+  return d;
+}
+let lastReplyTs = 0;
+function submitReply(key, box){
+  const nameEl = box.querySelector('.reply-name');
+  const msgEl  = box.querySelector('.reply-msg');
+  const name = nameEl.value.trim();
+  const msg  = msgEl.value.trim();
+  if(!name || !msg){ alert('Please enter your name and a reply'); return; }
+  const ts = Date.now();
+  if(ts - lastReplyTs < 2000){ alert('Please wait a moment before replying again.'); return; }
+  lastReplyTs = ts;
+  const data = { name, msg, ts };
+  if(window._db && String(key).indexOf('local')!==0){
+    window._db.ref(WISHES_PATH+'/'+key+'/replies').push(data).then(()=>{
+      msgEl.value=''; box.style.display='none';
+    }).catch(()=>alert('Could not send reply. Please try again.'));
+  } else {
+    box.previousElementSibling.appendChild(buildReplyEl(data));
+    msgEl.value=''; box.style.display='none';
+  }
 }
 
 function esc(s){ return String(s||'').replace(/[<>"'&]/g,c=>({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','&':'&amp;'}[c])); }
@@ -917,6 +1031,7 @@ applyTweaks();
   const params = new URLSearchParams(window.location.search);
   const guest  = params.get('guest');
   if(!guest) return;
+  window.__guestName = guest;
 
   // Hero greeting — show "Dear [Name]," above names
   const heroNames = document.querySelector('.hero-name');
