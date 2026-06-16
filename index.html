@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Adeeb & Maha | Wedding Invitation</title>
 <meta property="og:title" content="Adeeb & Maha — Wedding Invitation"/>
-<meta property="og:description" content="With the blessings of Allah, we joyfully invite you to celebrate the wedding of Dr. Adeeb Mohammed & Dr. Maha Marakkar — 20 August 2026, Palakkad."/>
+<meta property="og:description" content="With the blessings of Allah, we joyfully invite you to celebrate the wedding of Dr Adeeb Mohamed & Dr. Maha Marakkar — 20 August 2026, Palakkad."/>
 <meta property="og:type" content="website"/>
 <meta property="og:image" content="" id="ogImage"/>
 <meta property="og:image:secure_url" content="" id="ogImageSecure"/>
@@ -187,20 +187,26 @@ section{position:relative;z-index:3;padding:5rem 1.5rem;}
 .wish .wn{font-family:var(--serif);font-style:italic;color:var(--gold-hi);font-size:1.1rem;margin-bottom:.3rem;}
 .wish .wm{font-family:var(--italic);font-style:italic;color:var(--ivory);opacity:.75;font-size:.98rem;line-height:1.55;}
 .wish .wd{font-family:var(--micro);font-size:.55rem;letter-spacing:.2em;color:var(--ivory);opacity:.4;margin-top:.6rem;}
-.wish-actions{display:flex;gap:1.4rem;align-items:center;margin-top:.7rem;}
-.wish-like,.wish-reply-btn{background:none;border:none;cursor:pointer;font-family:var(--micro);font-size:.58rem;letter-spacing:.18em;color:var(--gold);display:inline-flex;align-items:center;gap:.4rem;padding:0;transition:color .25s;-webkit-tap-highlight-color:transparent;}
-.wish-like .heart{font-size:1.05rem;line-height:1;transition:transform .25s;}
-.wish-like.liked{color:var(--gold-hi);}
-.wish-like.liked .heart{color:#e0556b;transform:scale(1.15);}
-.wish-reply-btn:hover{color:var(--gold-hi);}
-.wish-replies{margin-top:.4rem;}
-.reply{font-family:var(--italic);font-style:italic;color:var(--ivory);opacity:.78;font-size:.92rem;line-height:1.5;padding:.4rem 0 .4rem .8rem;border-left:1px solid var(--gold-dim);margin-top:.4rem;}
-.reply .reply-n{font-family:var(--serif);font-style:normal;color:var(--gold-hi);font-size:.85rem;margin-right:.45rem;}
-.reply-box{margin-top:.7rem;display:flex;flex-direction:column;gap:.5rem;}
-.reply-box input{width:100%;padding:.6rem .8rem;background:transparent;border:1px solid var(--line);font-family:var(--italic);font-style:italic;color:var(--ivory);font-size:.92rem;}
-.reply-box input:focus{outline:none;border-color:var(--gold);}
-.reply-box .reply-send{align-self:flex-start;padding:.5rem 1.2rem;background:var(--gold);color:var(--ink);border:none;font-family:var(--micro);font-size:.55rem;letter-spacing:.3em;cursor:pointer;}
-.reply-box .reply-send:hover{background:var(--gold-hi);}
+.wish-foot{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.7rem;}
+.wish-like{background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;font-family:var(--micro);font-size:.85rem;color:rgba(245,239,227,.4);padding:0;transition:color .2s,transform .15s;-webkit-tap-highlight-color:transparent;}
+.wish-like:active{transform:scale(1.25);}
+.wish-like.liked{color:#e0556b;}
+.wish-like span{font-size:.6rem;letter-spacing:.05em;}
+.wish-reply{margin-top:.8rem;padding:.7rem .9rem;border-left:2px solid var(--gold);background:rgba(176,141,91,.07);border-radius:0 8px 8px 0;}
+.wish-reply-who{font-family:var(--micro);font-size:.55rem;letter-spacing:.18em;color:var(--gold);margin-bottom:.3rem;}
+.wish-reply-msg{font-family:var(--italic);font-style:italic;font-size:.95rem;color:var(--ivory);opacity:.82;line-height:1.55;}
+.wish-reply.reply-new{animation:replyGlow 2.4s ease 3;}
+@keyframes replyGlow{0%,100%{box-shadow:none;}50%{box-shadow:0 0 0 2px var(--gold);}}
+.wish-admin{margin-top:.7rem;display:flex;gap:.5rem;}
+.wish-reply-btn{padding:.5rem 1rem;background:var(--gold);color:var(--ink);border:none;font-family:var(--micro);letter-spacing:.14em;font-size:.5rem;cursor:pointer;}
+.wish-reply-btn.rm{background:transparent;color:var(--ivory);border:1px solid var(--line);}
+.reply-editor{margin-top:.7rem;}
+.reply-editor textarea{width:100%;min-height:62px;padding:.6rem .8rem;border:1px solid var(--line);background:transparent;font-family:var(--italic);font-style:italic;font-size:.95rem;color:var(--ivory);resize:vertical;margin-bottom:.5rem;}
+.reply-editor textarea:focus{outline:none;border-color:var(--gold);}
+.wish-empty{font-family:var(--italic);font-style:italic;font-size:1rem;color:var(--ivory);opacity:.5;text-align:center;padding:1.2rem 0;}
+#loadmore-wrap{text-align:center;margin-top:1.4rem;}
+#loadMoreBtn{padding:.8rem 2rem;background:transparent;border:1px solid var(--line);font-family:var(--micro);letter-spacing:.22em;font-size:.55rem;color:var(--gold);cursor:pointer;transition:all .2s;}
+#loadMoreBtn:hover{border-color:var(--gold);color:var(--gold-hi);}
 
 /* ── CONTACT ── */
 .contact{padding:1.5rem;border:1px solid var(--line);margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
@@ -283,7 +289,7 @@ footer{padding:5rem 1.5rem 3rem;text-align:center;position:relative;z-index:3;}
     <div class="env-body">
       <div class="env-monogram">A<span style="opacity:.5">&amp;</span>M</div>
       <div class="env-rule"></div>
-      <div class="env-names" style="letter-spacing:.18em;line-height:1.9;text-align:center;">DR. ADEEB MOHAMMED<br/><span style="font-family:var(--italic);font-style:italic;text-transform:none;letter-spacing:.05em;opacity:.65;font-size:1.5em;">weds</span><br/>DR. MAHA MARAKKAR</div>
+      <div class="env-names" style="letter-spacing:.18em;line-height:1.9;text-align:center;">DR ADEEB MOHAMED<br/><span style="font-family:var(--italic);font-style:italic;text-transform:none;letter-spacing:.05em;opacity:.65;font-size:1.5em;">weds</span><br/>DR. MAHA MARAKKAR</div>
       <div class="env-date">Wedding Invitation · 20 August 2026</div>
     </div>
     <div class="env-flap"></div>
@@ -309,13 +315,13 @@ footer{padding:5rem 1.5rem 3rem;text-align:center;position:relative;z-index:3;}
   <div class="hero-arabic-en" style="opacity:.4;font-size:.68rem;letter-spacing:.15em;margin-bottom:1.8rem;">— Surah Ar-Rum 30:21</div>
 
   <div class="hero-gline"></div>
-  <div class="hero-name fit-name" style="white-space:nowrap;letter-spacing:-.01em;padding:0 .55em;font-size:2.1rem;"><span class="shine">Dr. Adeeb Mohammed</span></div>
+  <div class="hero-name fit-name" style="white-space:nowrap;letter-spacing:-.01em;padding:0 .55em;font-size:2.1rem;"><span class="shine">Dr Adeeb Mohamed</span></div>
   <div class="hero-amp" style="margin:.5rem 0;">✦ weds ✦</div>
   <div class="hero-name fit-name" style="white-space:nowrap;letter-spacing:-.01em;padding:0 .55em;font-size:2.1rem;"><span class="shine">Dr. Maha Marakkar</span></div>
   <div class="hero-stars">✦ ✦ ✦</div>
 
   <div class="hero-date">THURSDAY · 20 AUGUST 2026</div>
-  <div class="hero-date">WEDDING FUNCTION · 10:30 AM</div>
+  <div class="hero-date">WEDDING FUNCTION · 5:00 PM</div>
   <div class="hero-place">Palakkad, Kerala</div>
 
   <div class="scroll-hint"><div class="line"></div>SCROLL</div>
@@ -370,7 +376,7 @@ footer{padding:5rem 1.5rem 3rem;text-align:center;position:relative;z-index:3;}
       <div class="event-num"><div class="n">01</div><div class="lbl">NIKAH</div></div>
       <div class="event-title">Wedding Function</div>
       <div class="event-row"><div class="k">Date</div><div class="v"><strong>Thursday, 20 August 2026</strong></div></div>
-      <div class="event-row"><div class="k">Time</div><div class="v"><strong>10:30 AM</strong> &nbsp;to&nbsp; <strong>2:30 PM</strong></div></div>
+      <div class="event-row"><div class="k">Time</div><div class="v"><strong>5:00 PM</strong> &nbsp;to&nbsp; <strong>9:00 PM</strong></div></div>
       <div class="event-row"><div class="k">Venue</div><div class="v"><strong>MKM Convention Center</strong><br/><span style="opacity:.6">Aloor, Thrithala<br/>Palakkad</span></div></div>
       <div class="event-btns">
         <a class="btn" href="https://www.google.com/maps/search/?api=1&query=MKM+Convention+Center+Aloor+Thrithala+Palakkad" target="_blank">LOCATION</a>
@@ -388,7 +394,7 @@ footer{padding:5rem 1.5rem 3rem;text-align:center;position:relative;z-index:3;}
 
   <div class="fam rv rv-d1">
     <div class="fam-side">THE GROOM</div>
-    <div class="fam-name">Dr. Adeeb Mohammed</div>
+    <div class="fam-name">Dr Adeeb Mohamed</div>
     <div class="fam-rel">Son of</div>
     <div class="fam-parent">Mr. Mohammed Abdul Latheef<br/>&amp; Mrs. Rabiya Abdul Latheef</div>
     <div class="fam-gp"><div class="fam-gp-title">MAMPULLINHALIL HOUSE &middot; ALOOR, PALAKKAD</div></div>
@@ -423,6 +429,7 @@ footer{padding:5rem 1.5rem 3rem;text-align:center;position:relative;z-index:3;}
 
   <div class="wish-count rv rv-d2" id="wishCount">0 Wishes &amp; Blessings</div>
   <div id="wgrid"></div>
+  <div id="loadmore-wrap" style="display:none;"><button id="loadMoreBtn" onclick="loadMore()">LOAD MORE</button></div>
 </section>
 
 <!-- FOOTER -->
@@ -526,7 +533,7 @@ function ics(title,s,e,loc){
   const v=`BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART:${fmt(s)}\nDTEND:${fmt(e)}\nSUMMARY:${title}\nLOCATION:${loc}\nEND:VEVENT\nEND:VCALENDAR`;
   return'data:text/calendar;charset=utf8,'+encodeURIComponent(v);
 }
-const ceremS=new Date('2026-08-20T10:30:00+05:30'),ceremE=new Date('2026-08-20T14:30:00+05:30');
+const ceremS=new Date('2026-08-20T17:00:00+05:30'),ceremE=new Date('2026-08-20T21:00:00+05:30');
 document.getElementById('ceremGcal').href=gcal("Adeeb & Maha — Wedding Function",ceremS,ceremE,"MKM Convention Center, Aloor, Thrithala, Palakkad");
 document.getElementById('ceremIcal').href=ics("Adeeb & Maha — Wedding Function",ceremS,ceremE,"MKM Convention Center, Aloor, Thrithala, Palakkad");
 
@@ -678,6 +685,7 @@ function enableAdmin(){
   document.getElementById('heroUploadBtn').style.display = 'flex';
   showBgmBtn(); setBgmIcon(bgmLoaded ? 'play' : 'empty');
   enableSlotEditing();
+  if(typeof renderWishes === 'function') renderWishes();
   alert('Admin mode ON');
 }
 
@@ -730,170 +738,145 @@ function uploadHeroImage(){
   }, { once:true });
 }
 
-// ── WISHES ──
-let lastWishKey = null;
-let wishTotal   = 0;
-let recentTs    = 0;
+// ── WISHES (likes + couple replies) ──
+let _allWishes = [];
+let _wishesShown = 6;
+const WISH_PAGE = 6;
+let recentTs = 0;
+
+function esc(s){ return String(s||'').replace(/[<>"'&]/g,c=>({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','&':'&amp;'}[c])); }
+
+function loadWishes(){
+  if(!window._db){ setTimeout(loadWishes, 400); return; }
+  window._db.ref(WISHES_PATH).orderByKey().on('value', snap=>{
+    const all=[];
+    snap.forEach(c=>{ const v=c.val(); if(v && (v.name||v.msg)) all.push({key:c.key,...v}); });
+    all.reverse();
+    _allWishes = all;
+    renderWishes();
+    checkOwnReplies();
+  });
+}
+
+function renderWishes(){
+  const grid = document.getElementById('wgrid');
+  if(!grid) return;
+  const cnt = _allWishes.length;
+  const cEl = document.getElementById('wishCount');
+  if(cEl) cEl.textContent = cnt + (cnt===1?' Wish & Blessing':' Wishes & Blessings');
+  if(!cnt){
+    grid.innerHTML = '<div class="wish-empty">No wishes yet — be the first to send your blessings!</div>';
+    const lw=document.getElementById('loadmore-wrap'); if(lw) lw.style.display='none';
+    return;
+  }
+  const visible = _allWishes.slice(0, _wishesShown);
+  grid.innerHTML = visible.map(wishCard).join('');
+  const lw=document.getElementById('loadmore-wrap'); if(lw) lw.style.display = cnt > _wishesShown ? 'block' : 'none';
+}
+
+function loadMore(){ _wishesShown += WISH_PAGE; renderWishes(); }
+
+function wishCard(w){
+  const likes = w.likes || 0;
+  const liked = localStorage.getItem('liked_'+w.key) ? ' liked' : '';
+  let h = `<div class="wish" data-key="${w.key}">`
+    + `<div class="wn">${esc(w.name)}</div>`
+    + `<div class="wm">"${esc(w.msg)}"</div>`
+    + `<div class="wish-foot">`
+    +   `<button class="wish-like${liked}" onclick="likeWish('${w.key}',this)" aria-label="like">♥ <span>${likes}</span></button>`
+    +   `<span class="wd">${esc(w.time||'')}</span>`
+    + `</div>`;
+  if(w.reply && w.reply.msg){
+    h += `<div class="wish-reply"><div class="wish-reply-who">↳ Adeeb &amp; Maha</div><div class="wish-reply-msg">${esc(w.reply.msg)}</div></div>`;
+  }
+  if(typeof adminMode !== 'undefined' && adminMode){
+    const has = w.reply && w.reply.msg;
+    h += `<div class="wish-admin"><button class="wish-reply-btn" onclick="openReplyEditor('${w.key}')">${has?'EDIT REPLY':'REPLY'}</button>${has?`<button class="wish-reply-btn rm" onclick="removeReply('${w.key}')">REMOVE</button>`:''}</div>`;
+  }
+  h += `</div>`;
+  return h;
+}
+
+// ── LIKE (one per device) ──
+function likeWish(key, btn){
+  if(localStorage.getItem('liked_'+key)) return;
+  localStorage.setItem('liked_'+key,'1');
+  if(btn){ btn.classList.add('liked'); const s=btn.querySelector('span'); if(s) s.textContent = (parseInt(s.textContent||'0',10)+1); }
+  if(window._db) window._db.ref(WISHES_PATH+'/'+key+'/likes').transaction(n => (n||0)+1);
+}
+
+// ── COUPLE REPLY (admin) ──
+function openReplyEditor(key){
+  const card = document.querySelector('.wish[data-key="'+key+'"]');
+  if(!card || card.querySelector('.reply-editor')) return;
+  const w = _allWishes.find(x => x.key===key) || {};
+  const ed = document.createElement('div'); ed.className='reply-editor';
+  const ta = document.createElement('textarea');
+  ta.placeholder = 'Reply to ' + (w.name || 'this wish') + '…';
+  if(w.reply && w.reply.msg) ta.value = w.reply.msg;
+  const save = document.createElement('button'); save.type='button'; save.className='wish-reply-btn'; save.textContent='SAVE REPLY';
+  save.onclick = function(){
+    const txt = ta.value.trim();
+    if(!txt){ showToast('Reply is empty'); return; }
+    if(!window._db){ showToast('No connection'); return; }
+    save.disabled = true;
+    window._db.ref(WISHES_PATH+'/'+key+'/reply').set({ msg: txt, ts: Date.now() }, function(err){
+      save.disabled = false;
+      if(err){ showToast('Could not save — try again'); return; }
+      showToast('Reply sent 🤍'); ed.remove();
+    });
+  };
+  ed.appendChild(ta); ed.appendChild(save);
+  card.appendChild(ed); ta.focus();
+}
+
+function removeReply(key){
+  if(!window._db) return;
+  window._db.ref(WISHES_PATH+'/'+key+'/reply').remove(function(err){
+    if(err){ showToast('Could not remove'); return; }
+    showToast('Reply removed');
+  });
+}
+
+// Same-device alert: notify a guest when the couple replies to THEIR wish.
+function checkOwnReplies(){
+  if(document.hidden) return;
+  let mine=[]; try{ mine=JSON.parse(localStorage.getItem('myWishKeys')||'[]'); }catch(e){}
+  if(!mine.length) return;
+  _allWishes.forEach(function(w){
+    if(mine.indexOf(w.key)>=0 && w.reply && w.reply.msg){
+      const seen='replySeen_'+w.key+'_'+w.reply.ts;
+      if(!localStorage.getItem(seen)){
+        localStorage.setItem(seen,'1');
+        showToast('Adeeb & Maha replied to your wish 🤍');
+        setTimeout(function(){ const r=document.querySelector('.wish[data-key="'+w.key+'"] .wish-reply'); if(r) r.classList.add('reply-new'); }, 250);
+      }
+    }
+  });
+}
+document.addEventListener('visibilitychange', function(){ if(!document.hidden) checkOwnReplies(); });
 
 function submitWish(){
   const n = document.getElementById('wisherName').value.trim();
   const m = document.getElementById('wisherMsg').value.trim();
   if(!n||!m){ alert('Please fill in both fields'); return; }
   const ts = Date.now();
-  if(ts - recentTs < 3000){ alert('Please wait a moment before sending another wish.'); return; }
-  recentTs = ts;
+  if(recentTs && ts - recentTs < 10000){ alert('Please wait a moment before sending another wish.'); return; }
   const data = { name:n, msg:m, time:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}), ts };
-  if(window._db){
-    window._db.ref(WISHES_PATH).push(data).then(()=>{
-      document.getElementById('wisherName').value='';
-      document.getElementById('wisherMsg').value='';
-      loadWishes(true);
-    }).catch(()=>alert('Could not send wish. Please try again.'));
-  } else {
-    prependWish({...data, key:'local'+ts});
+  if(!window._db){ alert('Wish sent!'); return; }
+  const wref = window._db.ref(WISHES_PATH).push();
+  // Remember our own wish keys so we can be notified of the couple's reply.
+  try{ const a=JSON.parse(localStorage.getItem('myWishKeys')||'[]'); a.push(wref.key); localStorage.setItem('myWishKeys', JSON.stringify(a.slice(-20))); }catch(e){}
+  wref.set(data).then(()=>{
+    recentTs = ts;
     document.getElementById('wisherName').value='';
     document.getElementById('wisherMsg').value='';
-  }
+    showToast('Wish sent! ✦');
+  }).catch(()=>alert('Could not send wish. Please try again.'));
 }
-
-function loadWishes(reset=false){
-  if(!window._db) return;
-  if(reset){ document.getElementById('wgrid').innerHTML=''; lastWishKey=null; }
-  let query = window._db.ref(WISHES_PATH).orderByKey().limitToLast(PAGE_SIZE);
-  if(lastWishKey) query = window._db.ref(WISHES_PATH).orderByKey().endBefore(lastWishKey).limitToLast(PAGE_SIZE);
-  window._db.ref(WISHES_PATH).once('value', snap=>{
-    wishTotal = snap.numChildren()||0;
-    document.getElementById('wishCount').textContent = wishTotal + (wishTotal===1?' Wish & Blessing':' Wishes & Blessings');
-  });
-  query.once('value', snap=>{
-    const items=[];
-    snap.forEach(c=>items.unshift({key:c.key,...c.val()}));
-    items.forEach(w=>appendWish(w));
-    if(items.length) lastWishKey = items[items.length-1].key;
-  });
-}
-
-function appendWish(w){
-  const el = buildWishEl(w);
-  document.getElementById('wgrid').appendChild(el);
-}
-function prependWish(w){
-  const el = buildWishEl(w);
-  document.getElementById('wgrid').insertBefore(el, document.getElementById('wgrid').firstChild);
-  wishTotal++;
-  document.getElementById('wishCount').textContent = wishTotal + (wishTotal===1?' Wish & Blessing':' Wishes & Blessings');
-}
-function buildWishEl(w){
-  const div = document.createElement('div');
-  div.className = 'wish';
-  div.dataset.key = w.key;
-  const likes = w.likes || 0;
-  div.innerHTML = `<div class="wn">${esc(w.name)}</div><div class="wm">"${esc(w.msg)}"</div><div class="wd">${esc(w.time||'')}</div>`
-    + `<div class="wish-actions">`
-    +   `<button type="button" class="wish-like"><span class="heart">♡</span><span class="like-count">${likes}</span></button>`
-    +   `<button type="button" class="wish-reply-btn">Reply</button>`
-    + `</div>`
-    + `<div class="wish-replies"></div>`
-    + `<div class="reply-box" style="display:none;">`
-    +   `<input type="text" class="reply-name" placeholder="Your name"/>`
-    +   `<input type="text" class="reply-msg" placeholder="Write a reply…"/>`
-    +   `<button type="button" class="reply-send">Reply</button>`
-    + `</div>`;
-
-  const likeBtn  = div.querySelector('.wish-like');
-  const replyBtn = div.querySelector('.wish-reply-btn');
-  const sendBtn  = div.querySelector('.reply-send');
-  const repliesEl= div.querySelector('.wish-replies');
-  const box      = div.querySelector('.reply-box');
-
-  // Prefill reply name with the personalised guest name (if present)
-  if(window.__guestName){ div.querySelector('.reply-name').value = window.__guestName; }
-
-  likeBtn.addEventListener('click', ()=>toggleLike(w.key, likeBtn));
-  replyBtn.addEventListener('click', ()=>{ box.style.display = (box.style.display==='none' ? 'flex' : 'none'); });
-  sendBtn.addEventListener('click', ()=>submitReply(w.key, box));
-
-  setHeart(likeBtn, w.key);
-  if(window._db && String(w.key).indexOf('local')!==0){
-    attachLikeListener(w.key, likeBtn);
-    attachRepliesListener(w.key, repliesEl);
-  }
-  return div;
-}
-
-// ── WISH LIKES ──
-function setHeart(btn, key){
-  const liked = localStorage.getItem('aWm_liked_'+key)==='1';
-  btn.classList.toggle('liked', liked);
-  btn.querySelector('.heart').textContent = liked ? '♥' : '♡';
-}
-function attachLikeListener(key, btn){
-  window._db.ref(WISHES_PATH+'/'+key+'/likes').on('value', s=>{
-    btn.querySelector('.like-count').textContent = s.val()||0;
-    setHeart(btn, key);
-  });
-}
-function toggleLike(key, btn){
-  const lsKey = 'aWm_liked_'+key;
-  const liked = localStorage.getItem(lsKey)==='1';
-  if(!window._db || String(key).indexOf('local')===0){
-    // No backend — toggle locally only
-    const c = btn.querySelector('.like-count');
-    let n = parseInt(c.textContent)||0;
-    if(liked){ localStorage.removeItem(lsKey); c.textContent = Math.max(0,n-1); }
-    else { localStorage.setItem(lsKey,'1'); c.textContent = n+1; }
-    setHeart(btn, key);
-    return;
-  }
-  window._db.ref(WISHES_PATH+'/'+key+'/likes').transaction(
-    cur => { cur = cur||0; return liked ? Math.max(0,cur-1) : cur+1; },
-    (err, committed) => {
-      if(!err && committed){
-        if(liked) localStorage.removeItem(lsKey); else localStorage.setItem(lsKey,'1');
-        setHeart(btn, key);
-      }
-    }
-  );
-}
-
-// ── WISH REPLIES ──
-function attachRepliesListener(key, container){
-  window._db.ref(WISHES_PATH+'/'+key+'/replies').on('value', s=>{
-    container.innerHTML='';
-    s.forEach(c=>{ container.appendChild(buildReplyEl(c.val())); });
-  });
-}
-function buildReplyEl(r){
-  const d = document.createElement('div');
-  d.className = 'reply';
-  d.innerHTML = `<span class="reply-n">${esc(r.name)}</span>${esc(r.msg)}`;
-  return d;
-}
-let lastReplyTs = 0;
-function submitReply(key, box){
-  const nameEl = box.querySelector('.reply-name');
-  const msgEl  = box.querySelector('.reply-msg');
-  const name = nameEl.value.trim();
-  const msg  = msgEl.value.trim();
-  if(!name || !msg){ alert('Please enter your name and a reply'); return; }
-  const ts = Date.now();
-  if(ts - lastReplyTs < 2000){ alert('Please wait a moment before replying again.'); return; }
-  lastReplyTs = ts;
-  const data = { name, msg, ts };
-  if(window._db && String(key).indexOf('local')!==0){
-    window._db.ref(WISHES_PATH+'/'+key+'/replies').push(data).then(()=>{
-      msgEl.value=''; box.style.display='none';
-    }).catch(()=>alert('Could not send reply. Please try again.'));
-  } else {
-    box.previousElementSibling.appendChild(buildReplyEl(data));
-    msgEl.value=''; box.style.display='none';
-  }
-}
-
-function esc(s){ return String(s||'').replace(/[<>"'&]/g,c=>({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','&':'&amp;'}[c])); }
 
 // Load wishes on start
-window.addEventListener('load', ()=>{ try{ loadWishes(true); }catch(e){} });
+window.addEventListener('load', ()=>{ try{ loadWishes(); }catch(e){} });
 
 // tweaks
 function applyTweaks(){
