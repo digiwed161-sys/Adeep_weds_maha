@@ -1195,11 +1195,12 @@ try {
     fd.append('file', file);
     fd.append('upload_preset', UPLOAD_PRESET);
     fd.append('folder', COUPLE_FOLDER + '/bgm');
-    fd.append('resource_type', 'video'); // Cloudinary treats audio as the 'video' resource type
 
     // Use XHR (not fetch) so we get real upload progress + a timeout for slow connections.
+    // /auto/upload lets Cloudinary auto-detect the resource type (audio is handled as 'video')
+    // — avoids the "invalid parameter" rejection some unsigned presets give for an explicit resource_type.
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + CLOUD_NAME + '/video/upload', true);
+    xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + CLOUD_NAME + '/auto/upload', true);
     xhr.timeout = 180000; // 3 minutes
 
     xhr.upload.onprogress = function(e){
