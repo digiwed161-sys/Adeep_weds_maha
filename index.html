@@ -1226,6 +1226,7 @@ try {
     }
     setBgmIcon('load');
     showToast('Uploading music… 0%');
+    input.value = '';
 
     // Cloudinary derives the public_id from the filename and REJECTS non-ASCII
     // characters (this song's name had Arabic + other Unicode → "public_id is
@@ -1233,69 +1234,101 @@ try {
     var ext = ((file.name.split('.').pop() || 'mp3').match(/[a-z0-9]+/i) || ['mp3'])[0].toLowerCase();
     var safeName = 'bgm_' + Date.now() + '.' + ext;
 
-    var fd = new FormData();
-    fd.append('file', file, safeName);
-    fd.append('upload_preset', UPLOAD_PRESET);
-    fd.append('folder', COUPLE_FOLDER + '/bgm');
+    // Audio is stored under Cloudinary's 'video' resource type. Post to
+    // /video/upload (NOT /auto/upload — that rejects the unsigned ml_default
+    // preset with "Invalid upload preset").
+    var uploadUrl = 'https://api.cloudinary.com/v1_1/' + CLOUD_NAME + '/video/upload';
 
-    // Use XHR (not fetch) so we get real upload progress + a timeout for slow connections.
-    // Audio is stored under Cloudinary's 'video' resource type. We post to the
-    // /video/upload endpoint (NOT /auto/upload): the unsigned ml_default preset is
-    // accepted there, whereas /auto/upload returns "Invalid upload preset". This is
-    // the same endpoint the working sibling invitation uses.
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + CLOUD_NAME + '/video/upload', true);
-    xhr.timeout = 180000; // 3 minutes
+    // CHUNKED upload: one big request stalls on flaky mobile connections (it was
+    // dying around ~51%). Sending the file in ~6 MB pieces keeps each request
+    // short and resilient, and lets a failed chunk retry without restarting.
+    // Each chunk except the last must be >= 5 MB (Cloudinary requirement).
+    var CHUNK   = 6 * 1024 * 1024;
+    var total   = file.size;
+    var uniqueId = 'bgm-' + Date.now() + '-' + Math.random().toString(36).slice(2);
 
-    xhr.upload.onprogress = function(e){
-      if(e.lengthComputable){
-        var pct = Math.round((e.loaded / e.total) * 100);
-        showToast('Uploading music… ' + pct + '%');
-      }
-    };
+    function uploadFail(reason, xhr){
+      console.error('Cloudinary BGM upload error:', reason, xhr && xhr.status, xhr && xhr.responseText);
+      var msg = reason || 'Upload failed';
+      showToast(msg);
+      // Admin is the only one who can upload, so surface the FULL reason in a
+      // dialog (the toast auto-hides too fast to read it).
+      if(adminMode){ alert('Music upload failed.\n\nCloudinary says: ' + msg); }
+      setBgmIcon(bgmLoaded?'play':'empty');
+    }
 
-    xhr.onload = function(){
-      var data = null;
-      try { data = JSON.parse(xhr.responseText); } catch(e){}
-      if(xhr.status >= 200 && xhr.status < 300 && data && data.secure_url){
-        var url = data.secure_url;
-        var audio = document.getElementById('bgmAudio');
-        audio.pause();
-        audio.src = url;
-        audio.load();
-        bgmLoaded = true;
-        if(window._db){
-          window._db.ref(BGM_PATH).set(url, function(err){
-            showToast(err ? 'Uploaded, but Firebase save FAILED' : 'Music saved ✓');
-          });
-        } else {
-          showToast('Uploaded, but DB not ready — not saved!');
-        }
-        audio.play().then(function(){ bgmPlaying=true; setBgmIcon('pause'); })
-                    .catch(function(){ setBgmIcon('play'); });
+    function finishBgmUpload(url){
+      var audio = document.getElementById('bgmAudio');
+      audio.pause();
+      audio.src = url;
+      audio.load();
+      bgmLoaded = true;
+      if(window._db){
+        window._db.ref(BGM_PATH).set(url, function(err){
+          showToast(err ? 'Uploaded, but Firebase save FAILED' : 'Music saved ✓');
+        });
       } else {
-        var msg = (data && data.error && data.error.message) ? data.error.message : ('Upload failed (' + xhr.status + ')');
-        console.error('Cloudinary BGM upload error:', xhr.status, xhr.responseText);
-        showToast(msg);
-        // Admin is the only one who can upload, so surface the FULL Cloudinary
-        // reason in a dialog (the toast auto-hides too fast to read it).
-        if(adminMode){ alert('Music upload failed.\n\nCloudinary says: ' + msg); }
-        setBgmIcon(bgmLoaded?'play':'empty');
+        showToast('Uploaded, but DB not ready — not saved!');
       }
-    };
+      audio.play().then(function(){ bgmPlaying=true; setBgmIcon('pause'); })
+                  .catch(function(){ setBgmIcon('play'); });
+    }
 
-    xhr.onerror = function(){
-      console.error('BGM upload network/CORS error');
-      showToast('Upload failed — network error');
-      setBgmIcon(bgmLoaded?'play':'empty');
-    };
-    xhr.ontimeout = function(){
-      showToast('Upload timed out — try a smaller file');
-      setBgmIcon(bgmLoaded?'play':'empty');
-    };
+    function sendChunk(start, attempt){
+      var end  = Math.min(start + CHUNK, total);
+      var blob = file.slice(start, end);
 
-    xhr.send(fd);
-    input.value = '';
+      var fd = new FormData();
+      fd.append('file', blob, safeName);
+      fd.append('upload_preset', UPLOAD_PRESET);
+      fd.append('folder', COUPLE_FOLDER + '/bgm');
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', uploadUrl, true);
+      xhr.timeout = 120000; // 2 min per chunk
+      // Tell Cloudinary this chunk's byte range + tie the chunks together.
+      xhr.setRequestHeader('X-Unique-Upload-Id', uniqueId);
+      xhr.setRequestHeader('Content-Range', 'bytes ' + start + '-' + (end - 1) + '/' + total);
+
+      xhr.upload.onprogress = function(e){
+        if(e.lengthComputable){
+          var pct = Math.round(((start + e.loaded) / total) * 100);
+          showToast('Uploading music… ' + Math.min(pct, 100) + '%');
+        }
+      };
+
+      xhr.onload = function(){
+        var data = null;
+        try { data = JSON.parse(xhr.responseText); } catch(e){}
+        if(xhr.status >= 200 && xhr.status < 300){
+          if(end < total){
+            sendChunk(end, 0);                 // more to go
+          } else if(data && data.secure_url){
+            finishBgmUpload(data.secure_url);  // last chunk → full asset returned
+          } else {
+            uploadFail((data && data.error && data.error.message) || 'Upload finished but no URL returned', xhr);
+          }
+        } else {
+          uploadFail((data && data.error && data.error.message) || ('Upload failed (' + xhr.status + ')'), xhr);
+        }
+      };
+
+      // Retry a stalled/failed chunk a couple of times before giving up.
+      function retryOrFail(reason){
+        if(attempt < 2){
+          showToast('Connection hiccup — retrying…');
+          setTimeout(function(){ sendChunk(start, attempt + 1); }, 1500);
+        } else {
+          uploadFail(reason, xhr);
+        }
+      }
+      xhr.onerror   = function(){ retryOrFail('network error'); };
+      xhr.ontimeout = function(){ retryOrFail('timed out — check your connection'); };
+
+      xhr.send(fd);
+    }
+
+    sendChunk(0, 0);
   }
 
 </script>
