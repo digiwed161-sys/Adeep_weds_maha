@@ -1269,6 +1269,9 @@ try {
         var msg = (data && data.error && data.error.message) ? data.error.message : ('Upload failed (' + xhr.status + ')');
         console.error('Cloudinary BGM upload error:', xhr.status, xhr.responseText);
         showToast(msg);
+        // Admin is the only one who can upload, so surface the FULL Cloudinary
+        // reason in a dialog (the toast auto-hides too fast to read it).
+        if(adminMode){ alert('Music upload failed.\n\nCloudinary says: ' + msg); }
         setBgmIcon(bgmLoaded?'play':'empty');
       }
     };
