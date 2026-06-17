@@ -1080,10 +1080,10 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "355557621111",
   appId:             "1:355557621111:web:d0b78c34bfe5a53b69f572"
 };
-const RSVP_PATH     = "adeeb-weds-maha/rsvp";
+const RSVP_PATH     = "maha-adeeb/rsvp";
 const WISHES_PATH   = "adeeb-weds-maha/wishes";
-const IMG_PATH      = "adeeb-weds-maha/media";
-const COUPLE_FOLDER = "digiwed-invitations/adeeb-weds-maha";
+const IMG_PATH      = "maha-adeeb/media";
+const COUPLE_FOLDER = "digiwed-invitations/maha-adeeb";
 const ADMIN_PIN     = "2026MA";
 const CLOUD_NAME    = "dormnrhdf";
 const UPLOAD_PRESET = "ml_default";
@@ -1106,7 +1106,8 @@ try {
   }
 
   // ── BGM ──────────────────────────────────────────────────────────────
-  const BGM_PATH = IMG_PATH + '/bgm-url';
+  // Dedicated, isolated BGM path so this invite's song is independent of the shared media namespace.
+  const BGM_PATH = 'adeeb-weds-maha/bgm-url';
   var bgmPlaying = false;
   var bgmLoaded  = false;
 
