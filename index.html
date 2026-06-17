@@ -1227,8 +1227,14 @@ try {
     setBgmIcon('load');
     showToast('Uploading music… 0%');
 
+    // Cloudinary derives the public_id from the filename and REJECTS non-ASCII
+    // characters (this song's name had Arabic + other Unicode → "public_id is
+    // invalid"). Send a sanitized ASCII-only filename so the id is always valid.
+    var ext = ((file.name.split('.').pop() || 'mp3').match(/[a-z0-9]+/i) || ['mp3'])[0].toLowerCase();
+    var safeName = 'bgm_' + Date.now() + '.' + ext;
+
     var fd = new FormData();
-    fd.append('file', file);
+    fd.append('file', file, safeName);
     fd.append('upload_preset', UPLOAD_PRESET);
     fd.append('folder', COUPLE_FOLDER + '/bgm');
 
