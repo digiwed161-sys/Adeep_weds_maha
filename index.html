@@ -1181,33 +1181,48 @@ try {
   function uploadBgm(input){
     var file = input.files[0];
     if(!file) return;
+    // Keep BGM reasonably small (Cloudinary unsigned uploads cap out; large files time out).
+    if(file.size > 40 * 1024 * 1024){
+      showToast('File too large (max 40MB)');
+      setBgmIcon(bgmLoaded?'play':'empty');
+      input.value=''; return;
+    }
     setBgmIcon('load');
     showToast('Uploading music…');
     var fd = new FormData();
     fd.append('file', file);
     fd.append('upload_preset', UPLOAD_PRESET);
     fd.append('folder', COUPLE_FOLDER + '/bgm');
+    fd.append('resource_type', 'video');
     fetch('https://api.cloudinary.com/v1_1/' + CLOUD_NAME + '/video/upload', {method:'POST', body:fd})
       .then(function(r){ return r.json(); })
       .then(function(data){
-        if(!data.secure_url){ showToast('Upload failed'); setBgmIcon(bgmLoaded?'play':'empty'); return; }
+        if(!data || !data.secure_url){
+          var msg = (data && data.error && data.error.message) ? data.error.message : 'Upload failed';
+          console.error('Cloudinary BGM upload error:', data);
+          showToast(msg);
+          setBgmIcon(bgmLoaded?'play':'empty');
+          return;
+        }
         var url = data.secure_url;
         document.getElementById('bgmAudio').src = url;
         bgmLoaded = true;
         if(window._db){
           window._db.ref(BGM_PATH).set(url, function(err){
-            if(err){ showToast('Firebase save FAILED'); }
-            else { showToast('Music saved to Firebase ✓'); }
+            showToast(err ? 'Uploaded, but Firebase save FAILED' : 'Music saved ✓');
           });
         } else {
-          showToast('DB not ready — not saved!');
+          showToast('Uploaded, but DB not ready — not saved!');
         }
-        showToast('Music saved ✓');
         document.getElementById('bgmAudio').play()
           .then(function(){ bgmPlaying=true; setBgmIcon('pause'); })
           .catch(function(){ setBgmIcon('play'); });
       })
-      .catch(function(){ showToast('Upload failed'); setBgmIcon(bgmLoaded?'play':'empty'); });
+      .catch(function(err){
+        console.error('BGM upload network/CORS error:', err);
+        showToast('Upload failed — network error');
+        setBgmIcon(bgmLoaded?'play':'empty');
+      });
     input.value = '';
   }
 
