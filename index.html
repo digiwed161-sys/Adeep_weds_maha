@@ -1233,10 +1233,12 @@ try {
     fd.append('folder', COUPLE_FOLDER + '/bgm');
 
     // Use XHR (not fetch) so we get real upload progress + a timeout for slow connections.
-    // /auto/upload lets Cloudinary auto-detect the resource type (audio is handled as 'video')
-    // — avoids the "invalid parameter" rejection some unsigned presets give for an explicit resource_type.
+    // Audio is stored under Cloudinary's 'video' resource type. We post to the
+    // /video/upload endpoint (NOT /auto/upload): the unsigned ml_default preset is
+    // accepted there, whereas /auto/upload returns "Invalid upload preset". This is
+    // the same endpoint the working sibling invitation uses.
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + CLOUD_NAME + '/auto/upload', true);
+    xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + CLOUD_NAME + '/video/upload', true);
     xhr.timeout = 180000; // 3 minutes
 
     xhr.upload.onprogress = function(e){
