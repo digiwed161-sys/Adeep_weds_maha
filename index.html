@@ -476,11 +476,15 @@ let TW = {...TWEAK_DEFAULTS};
 // envelope
 function openEnv(){
   document.getElementById('envWrap').classList.add('open');
+  // Start the music inside THIS user gesture (the tap that opens the envelope)
+  // so the browser's autoplay policy doesn't block it. The URL was preloaded
+  // on page load, so the track is ready to go the instant the guest taps.
+  if(typeof showBgmBtn === 'function'){ showBgmBtn(); }
+  if(typeof playBgm === 'function'){ playBgm(); }
   setTimeout(()=>{
     document.getElementById('envelope').classList.add('gone');
     document.body.style.overflowY='auto';
-    showBgmBtn();
-    loadBgmFromFirebase();
+    if(typeof showBgmBtn === 'function'){ showBgmBtn(); }
   },1400);
 }
 setTimeout(()=>{
@@ -1121,29 +1125,46 @@ try {
     document.getElementById('bgmBtn').style.display = 'flex';
   }
 
+  // Preload the track URL from Firebase as soon as the DB is ready. This only
+  // sets up the <audio> source — it never tries to autoplay here, because at
+  // page-load time there is no user gesture and the browser would block it.
   function loadBgmFromFirebase(){
     if(!window._db){ setTimeout(loadBgmFromFirebase, 300); return; }
     window._db.ref(BGM_PATH).once('value', function(snap){
       var url = snap.val();
+      var audio = document.getElementById('bgmAudio');
       if(url){
-        var audio = document.getElementById('bgmAudio');
-        audio.src = url;
+        if(audio.src !== url){ audio.src = url; }
+        audio.preload = 'auto';
+        try { audio.load(); } catch(e){}
         bgmLoaded = true;
-        setBgmIcon('play');
         showBgmBtn();
-        audio.play().then(function(){
-          bgmPlaying = true;
-          setBgmIcon('pause');
-          showToast('♫ Playing');
-        }).catch(function(){
-          setBgmIcon('play');
-          showToast('Tap ♪ to play');
-        });
+        setBgmIcon(bgmPlaying ? 'pause' : 'play');
       } else {
+        bgmLoaded = false;
         setBgmIcon('empty');
-        showToast('No BGM in Firebase');
       }
     });
+  }
+
+  // Start playback. Safe to call from any user gesture; resolves the autoplay
+  // promise and keeps the icon/state in sync whether it succeeds or is blocked.
+  function playBgm(){
+    var audio = document.getElementById('bgmAudio');
+    if(!bgmLoaded || !audio.src) return;
+    var p = audio.play();
+    if(p && p.then){
+      p.then(function(){
+        bgmPlaying = true;
+        setBgmIcon('pause');
+      }).catch(function(){
+        bgmPlaying = false;
+        setBgmIcon('play');
+      });
+    } else {
+      bgmPlaying = true;
+      setBgmIcon('pause');
+    }
   }
 
   function toggleBgm(){
@@ -1157,12 +1178,27 @@ try {
       bgmPlaying = false;
       setBgmIcon('play');
     } else {
-      audio.play().then(function(){
-        bgmPlaying = true;
-        setBgmIcon('pause');
-      }).catch(function(){ setBgmIcon('play'); });
+      playBgm();
     }
   }
+
+  // Autoplay-policy fallback: if the envelope-tap couldn't start the music
+  // (e.g. the URL hadn't loaded yet), the next real interaction anywhere on
+  // the page kicks it off. Self-removes once the track is playing.
+  (function(){
+    function kick(){
+      if(bgmLoaded && !bgmPlaying){ playBgm(); }
+      if(bgmPlaying){
+        document.removeEventListener('touchend', kick);
+        document.removeEventListener('click', kick);
+      }
+    }
+    document.addEventListener('touchend', kick, {passive:true});
+    document.addEventListener('click', kick);
+  })();
+
+  // Kick off the preload now so the song is ready before the envelope opens.
+  loadBgmFromFirebase();
 
   // Long-press on BGM button = upload new BGM (admin only)
   (function(){
